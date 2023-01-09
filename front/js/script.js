@@ -2,65 +2,63 @@
 async function fetchText() {
     // variable qui appel la fonction spécial fetch
     let response = await fetch("http://localhost:3000/api/products");
-
     return await response.json();   
 }
 
 
-// recuperation des data
+
 getCanape();
 
+function affichagePopUp() {
+    if (window.confirm("Connexion impossible à l'API")) {
+        window.location.href("index.html", );
+    }
+}
+
+// fonction qui nous renvoie les éléments des canapés récupérer dans l'API
 async function getCanape() {
     let result = await fetchText()
-
     .then (function(res) {
 
         const articles = res;
-
-        // ajout du a de chaque article
+        // Création de la boucle for qui récuperera l'ensemble des informations de l'API
         for (let i = 0; i < articles.length; i++) {
 
-            // Récupération de l'élément du DOM qui accueillera les fiches des canapés
+            // Positionnement dans le DOM
             let sectionFiches = document.querySelector(".items");
 
+            //Création d'un lien "a" contenant toutes les informations des canapés et qui renverra à la page souhaité
+            let LienProduit = document.createElement("a");
+            LienProduit.href = `product.html?id=${res[i]._id}`;
+            sectionFiches.appendChild(LienProduit);
 
-            //Création d'une balise a contenant toutes les informations des canapés 
-            let newElt = document.createElement("a");
-
-            newElt.href = `product.html?id=${res[i]._id}`; 
-
-            //ajout de la section article de chaque a
+            //ajout de la section article de chaque lien "a"
             let newArticle = document.createElement("article");
+            LienProduit.appendChild(newArticle);
             
-            let newImg = document.createElement("img");
-            newImg.src = `${res[i].imageUrl}`;
-            newImg.alt = `${res[i].altTxt}`;
+            //Création d'une "img" en lui indiquant sa source et son texte alternatif
+            let ImgCanape = document.createElement("img");
+            ImgCanape.src = `${res[i].imageUrl}`;
+            ImgCanape.alt = `${res[i].altTxt}`;
+            newArticle.appendChild(ImgCanape);
 
-            let newTitleKanape = document.createElement("h3");
-            newTitleKanape.className = `productName`;
-            newTitleKanape.textContent = `${res[i].name}`;
+            //Création du titre "h3" de chaque produit en lui déclarant une class
+            let titleCanape = document.createElement("h3");
+            titleCanape.className = `productName`;
+            titleCanape.textContent = `${res[i].name}`;
+            newArticle.appendChild(titleCanape);
 
-            let newDescriptionKanape = document.createElement("p");
-            newDescriptionKanape.className = `productDescription`;
-            newDescriptionKanape.textContent = `${res[i].description}`;
-
-
-            // On rattache la balise a à chaque section .items
-            sectionFiches.appendChild(newElt);
-
-            // On rattache tout les éléments à notre balise a 
-            newElt.appendChild(newArticle);
-            newArticle.appendChild(newImg);
-            newArticle.appendChild(newTitleKanape);
-            newArticle.appendChild(newDescriptionKanape);
-            
+            //Création d'une balise "p" pour la description de chaque produit en lui déclarant une class
+            let descriptionCanape = document.createElement("p");
+            descriptionCanape.className = `productDescription`;
+            descriptionCanape.textContent = `${res[i].description}`;
+            newArticle.appendChild(descriptionCanape);    
         }
-  
-    
     } )
 
 
     .catch(function(err) {
+        affichagePopUp();
         console.log('error');
     })
 }
