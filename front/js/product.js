@@ -66,8 +66,8 @@ async function getCanape() {
 
 
     .catch(function(err) {
-        // affichagePopUp();
-        // console.log('error');
+        affichagePopUp();
+        console.log('error');
     })
 }
 
