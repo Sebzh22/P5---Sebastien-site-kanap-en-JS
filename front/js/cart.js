@@ -1,19 +1,27 @@
-//Récupération des informations qui sont stockées dans le local storage
+// Déclaration de la variable "produitEnregistreLocalStorage" dans laquelle il y aura les key et les values qui sont dans le local storage
+//JSON.parse sert à convertir les données au format JSON qui sont dans le local storage en objet JS
 let produitEnregistreLocalStorage = JSON.parse(localStorage.getItem("produit"));
 console.log(produitEnregistreLocalStorage);
 
-
-
 //Sélection de l'id dans lequel on injecte le code HTML
 let positionArticlePanier = document.querySelector("#cart__items");
-console.log(positionArticlePanier);
+
+let structureProduitPanier = [];
 
 // Affichage d'une alerte si le panier est vide 
 if(produitEnregistreLocalStorage === null){
-    alert("Votre panier est vide");
+alert("Votre panier est vide");
+// //Création d'un élément HTML affichant que le Panier est vide
+// const panierVide = `
+//     <div>
+//         <div> Le Panier est vide </div>
+//     </div>
+// `;
+// positionArticlePanier.innerHTML = panierVide;
+
 } else {
-    // Si le panier les pas vide, il faut afficher les produits du local storage
-    let structureProduitPanier = [];
+    // Si le panier n'est pas vide, il faut afficher les produits du local storage
+    
 
     for(j = 0; j < produitEnregistreLocalStorage.length; j++){
         
@@ -46,27 +54,29 @@ if(produitEnregistreLocalStorage === null){
         positionArticlePanier.innerHTML = structureProduitPanier;
         }
 }
+//--------------------Fin de l'affichage des produits ajouter au panier --------
+
+//-------------------- Gestion du bouton supprimer l'article du panier ------------
+
+//Sélection de la class du bouton supprimer
+let btnSupprimer = document.querySelectorAll(".deleteItem");
+
+for (let k = 0; k < btnSupprimer.length; k++) {
+    btnSupprimer[k].addEventListener("click" , (event) => {
+        event.preventDefault();
 
 
-
-
-
-
-
-
-
-/*function saveBasket(basket) {
-    localStorage.setItem("basket", JSON.stringify(basket));
+        // Sélection de l'id du produit qui sera supprimer en cliquant sur le bouton
+    let idSelectionSuppression = produitEnregistreLocalStorage[k].id_Canape
+    console.log(idSelectionSuppression);
+    })
 }
 
-function getBasket() {
-    let basket = localStorage.getItem("basket");
-    if(basket == null) {
-        return[];
-    } else{
-        return JSON.parse(basket);
-    }
-}
+
+
+
+/*
+
 
 function addBasket(product){
     //On récupère le panier qui existe dans le localstorage
