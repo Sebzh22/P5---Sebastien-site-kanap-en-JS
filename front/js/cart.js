@@ -3,6 +3,34 @@
 let produitEnregistreLocalStorage = JSON.parse(localStorage.getItem("produit"));
 console.log(produitEnregistreLocalStorage);
 
+getPanier();
+
+function getPanier() {
+    // Récuperer les produits dans le localStorage
+    for (let canape in produitEnregistreLocalStorage){
+        //Création du DOM pour le produit
+    }
+}
+
+getTotal();
+
+function getTotal(){
+    //Ajouter les quantité et addition du total
+
+}
+
+supprimerCanape()
+
+function supprimerCanape(){
+
+}
+
+modifierQuantite()
+
+function modifierQuantite() {
+
+}
+
 //Sélection de l'id dans lequel on injecte le code HTML
 let positionArticlePanier = document.querySelector("#cart__items");
 

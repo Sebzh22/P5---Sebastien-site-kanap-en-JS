@@ -107,38 +107,54 @@ buttonAddBasket.addEventListener("click", function() {
             let produitEnregistreLocalStorage = JSON.parse(localStorage.getItem("produit"));
             console.log(produitEnregistreLocalStorage);
 
-            //-------  Fonction qui sert à ajouter un canapé dans le local storage ----
-            const ajoutProduitLocalStorage = () => {
+            if(produitEnregistreLocalStorage) {
+                const resultatFind = produitEnregistreLocalStorage.find(
+                    (el) => el.id_Canape === idKanape && el.option_Couleur === colorCanapeSelection.value);
+                    if(resultatFind) {
+                        let newQuantity = parseInt (parametreCanape.nombre_Canape) + parseInt (resultatFind.nombre_Canape);
+                        resultatFind.nombre_Canape = newQuantity;
+                        localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage));
+                    } else {
+                        //Ajout dans le tableau de l'objet avec les values choisi par l'utilisateur
+                        produitEnregistreLocalStorage.push(parametreCanape);
+                        //Transformation en format JSON et envoi dans la key "produit" du local Storage
+                        localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage));  
+                    }
+                    
+            } else {
+                produitEnregistreLocalStorage = [];
                 //Ajout dans le tableau de l'objet avec les values choisi par l'utilisateur
                 produitEnregistreLocalStorage.push(parametreCanape);
                 //Transformation en format JSON et envoi dans la key "produit" du local Storage
-                localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage));   
-            };
+                localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage));  
+            }
+
+           
 
             //Recherche pour voir si le produit est déjà dans le localStorage
             //On recherche dans le localStorage si il y a un produit (findCanape) dont l'id
             //est égal à l'id du produit que je veux ajouter (produit)
-            const foundCanape = (produitEnregistreLocalStorage || []) .find ( function (findCanape) {   
-            return findCanape.option_Couleur === parametreCanape.option_Couleur
-            &&
-            findCanape.id_Canape === parametreCanape.id_Canape;
-            });
-            console.log(foundCanape);
+            // const foundCanape = (produitEnregistreLocalStorage || []) .find ( function (findCanape) {   
+            // return findCanape.option_Couleur === parametreCanape.option_Couleur
+            // &&
+            // findCanape.id_Canape === parametreCanape.id_Canape;
+            // });
+            // console.log(foundCanape);
 
-             //S'il y a deja des produits enregistrer dans le local storage
-             if(foundCanape != undefined){                              
-                console.log("Je suis deja dans le panier");
-                ajoutProduitLocalStorage();
-                // foundCanape.nombre_Canape += foundCanape.nombre_Canape; 
-                console.log(produitEnregistreLocalStorage);
-            }
-            // s'il n'y a pas de produit enregistré dans le local storage
-            else{
-                console.log("Ajouter moi dans le panier");
-                produitEnregistreLocalStorage = [];
-                ajoutProduitLocalStorage(); 
-                console.log(produitEnregistreLocalStorage);   
-            }
+            //  //S'il y a deja des produits enregistrer dans le local storage
+            //  if(foundCanape != undefined){                              
+            //     console.log("Je suis deja dans le panier");
+            //     ajoutProduitLocalStorage();
+            //     // foundCanape.nombre_Canape += foundCanape.nombre_Canape; 
+            //     console.log(produitEnregistreLocalStorage);
+            // }
+            // // s'il n'y a pas de produit enregistré dans le local storage
+            // else{
+            //     console.log("Ajouter moi dans le panier");
+            //     produitEnregistreLocalStorage = [];
+            //     ajoutProduitLocalStorage(); 
+            //     console.log(produitEnregistreLocalStorage);   
+            // }
             
             
      } else {
