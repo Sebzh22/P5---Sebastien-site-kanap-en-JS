@@ -12,11 +12,11 @@ const idKanape = urlProductKanape.get("id");
 getCanape();
 
 // Récupération des paramètres du canapé sélectionné
-const quantiteCanapeSelection = document.querySelector("#quantity");
-const colorCanapeSelection = document.querySelector("#colors");
-const sectionTitleCanape = document.querySelector("#title");
-const sectionPrixCanape = document.querySelector("#price");
-const sectionDescriptionCanape = document.querySelector("#description");
+const quantiteKanapSelection = document.querySelector("#quantity");
+const couleurKanapSelection = document.querySelector("#colors");
+const sectionTitreKanap = document.querySelector("#title");
+const sectionPrixKanap = document.querySelector("#price");
+const sectionDescriptionKanap = document.querySelector("#description");
 const sectionImg = document.querySelector(".item__img");
 const imgKanape = document.createElement("img"); 
 
@@ -43,23 +43,23 @@ function getCanape() {
         sectionImg.appendChild(imgKanape);
 
         //Insertion du titre correspondant à l'id de la page 
-        let titleKanape = document.createTextNode(data.name);
-        sectionTitleCanape.appendChild(titleKanape);
+        let titreKanape = document.createTextNode(data.name);
+        sectionTitreKanap.appendChild(titreKanape);
 
         //Insertion du Prix correspondant au produit de la page 
         let prixKanape = document.createTextNode(data.price);
-        sectionPrixCanape.appendChild(prixKanape);
+        sectionPrixKanap.appendChild(prixKanape);
 
         //Insertion de la description du produit dans la balise p avec l'id description
         let descriptionKanape = document.createTextNode(data.description); 
-        sectionDescriptionCanape.appendChild(descriptionKanape);
+        sectionDescriptionKanap.appendChild(descriptionKanape);
 
         //Création des options de couleurs du canapé dans la partie select en fonction du nombre de couleurs de chaque produits
     for (let i = 0; i < data.colors.length; i++) {
-        let newColor = document.createElement("option");
-        newColor.value = data.colors[i];
-        newColor.textContent = data.colors[i];
-        colorCanapeSelection.appendChild(newColor);  
+        let newCouleur = document.createElement("option");
+        newCouleur.value = data.colors[i];
+        newCouleur.textContent = data.colors[i];
+        couleurKanapSelection.appendChild(newCouleur);  
         
     }
 
@@ -79,24 +79,24 @@ function getCanape() {
 function gestionPanier(canape){
 
 // Selection du bouton ajouter l'article au panier
-let buttonAddBasket = document.querySelector("#addToCart");
+let bouttonAjoutPanier = document.querySelector("#addToCart");
 
 //--------------------addEventListener  -  Ecoute du bouton et envoi du panier -------------------
-buttonAddBasket.addEventListener("click", function() {
+bouttonAjoutPanier.addEventListener("click", function() {
     
     // Maintnenant il faut vérifier si la quantité est comprise entre 1 et 100
     // el la couleur différent de vide
 
-     if((quantiteCanapeSelection.value > 0 && quantiteCanapeSelection.value <=100) && (colorCanapeSelection.value !== "")){
+     if((quantiteKanapSelection.value > 0 && quantiteKanapSelection.value <=100) && (couleurKanapSelection.value !== "")){
         // Si la condition est rempli alors : Récupération des données sélectionnées par l'utilisateur et envoie du panier
         let parametreCanape = {
-            id_Canape: idKanape,
-            option_Couleur : colorCanapeSelection.value,
-            nombre_Canape : quantiteCanapeSelection.value,
-            nom_Canape : sectionTitleCanape.innerText,
-            prix_Canape : sectionPrixCanape.innerText,
-            img_Canape : imgKanape.src,
-            alt_Img_Canape : imgKanape.alt,
+            idCanape: idKanape,
+            couleurCanape : couleurKanapSelection.value,
+            nombreCanape : quantiteKanapSelection.value,
+            nomCanape : sectionTitreKanap.innerText,
+            prixCanape : sectionPrixKanap.innerText,
+            imgCanape : imgKanape.src,
+            imgCanapeAlt : imgKanape.alt,
         };
 
         console.log(parametreCanape);
@@ -107,55 +107,32 @@ buttonAddBasket.addEventListener("click", function() {
             let produitEnregistreLocalStorage = JSON.parse(localStorage.getItem("produit"));
             console.log(produitEnregistreLocalStorage);
 
+            //Si il y a quelques choses d'enregistre dans le localStorage
             if(produitEnregistreLocalStorage) {
+                //On cherche pour voir si il y a déja un canape avec le meme id et la meme couleur
                 const resultatFind = produitEnregistreLocalStorage.find(
-                    (el) => el.id_Canape === idKanape && el.option_Couleur === colorCanapeSelection.value);
+                    (el) => el.idCanape === idKanape && el.couleurCanape === couleurKanapSelection.value);
+                    //Si oui on modifie la quantité
                     if(resultatFind) {
-                        let newQuantity = parseInt (parametreCanape.nombre_Canape) + parseInt (resultatFind.nombre_Canape);
-                        resultatFind.nombre_Canape = newQuantity;
+                        // On ajoute la nouvelle quantité à la quantité deja enregistré
+                        let newQuantity = parseInt (parametreCanape.nombreCanape) + parseInt (resultatFind.nombreCanape);
+                        resultatFind.nombreCanape = newQuantity;
                         localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage));
+                    //Sinon on rajoute le Canapé selectionné
                     } else {
                         //Ajout dans le tableau de l'objet avec les values choisi par l'utilisateur
                         produitEnregistreLocalStorage.push(parametreCanape);
                         //Transformation en format JSON et envoi dans la key "produit" du local Storage
                         localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage));  
                     }
-                    
+            //S'il n'y a rien dans le localStorage        
             } else {
                 produitEnregistreLocalStorage = [];
                 //Ajout dans le tableau de l'objet avec les values choisi par l'utilisateur
                 produitEnregistreLocalStorage.push(parametreCanape);
                 //Transformation en format JSON et envoi dans la key "produit" du local Storage
-                localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage));  
-            }
-
-           
-
-            //Recherche pour voir si le produit est déjà dans le localStorage
-            //On recherche dans le localStorage si il y a un produit (findCanape) dont l'id
-            //est égal à l'id du produit que je veux ajouter (produit)
-            // const foundCanape = (produitEnregistreLocalStorage || []) .find ( function (findCanape) {   
-            // return findCanape.option_Couleur === parametreCanape.option_Couleur
-            // &&
-            // findCanape.id_Canape === parametreCanape.id_Canape;
-            // });
-            // console.log(foundCanape);
-
-            //  //S'il y a deja des produits enregistrer dans le local storage
-            //  if(foundCanape != undefined){                              
-            //     console.log("Je suis deja dans le panier");
-            //     ajoutProduitLocalStorage();
-            //     // foundCanape.nombre_Canape += foundCanape.nombre_Canape; 
-            //     console.log(produitEnregistreLocalStorage);
-            // }
-            // // s'il n'y a pas de produit enregistré dans le local storage
-            // else{
-            //     console.log("Ajouter moi dans le panier");
-            //     produitEnregistreLocalStorage = [];
-            //     ajoutProduitLocalStorage(); 
-            //     console.log(produitEnregistreLocalStorage);   
-            // }
-            
+                localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage)); 
+            }          
             
      } else {
         alert("Vous n'avez pas sélectionné toutes les options. \nMerci de sélectionner une couleur et une quantité  entre 1 et 100.")
