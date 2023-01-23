@@ -3,129 +3,196 @@
 let produitEnregistreLocalStorage = JSON.parse(localStorage.getItem("produit"));
 console.log(produitEnregistreLocalStorage);
 
+
+
+//---------------------------------------Création du Dom------------------------------------------------
 getPanier();
 
 function getPanier() {
+
+    // Affichage d'une alerte si le panier est vide 
+    if(produitEnregistreLocalStorage === null || produitEnregistreLocalStorage == 0){
+    alert("Votre panier est vide");
+    } else {
     // Récuperer les produits dans le localStorage
     for (let canape in produitEnregistreLocalStorage){
         //Création du DOM pour le produit
+
+        // Positionnement dans le DOM
+        let carteProduit = document.querySelector("#cart__items");
+
+        //Création d'un article contenant toutes les informations des canapés dans le panier
+        let articleProduit = document.createElement("article");
+        articleProduit.className = `cart__item`;
+        articleProduit.setAttribute (`data-id`, `${produitEnregistreLocalStorage[canape].idCanape}`);
+        articleProduit.setAttribute (`data-color`, `${produitEnregistreLocalStorage[canape].couleurCanape}`);
+        carteProduit.appendChild(articleProduit);
+
+
+        //Création et ajout d'une div contenant l'image
+        let cartItemImg = document.createElement("div");
+        cartItemImg.className = `cart__item__img`;
+        articleProduit.appendChild(cartItemImg);
+
+        // Ajout de l'image dans sa div
+        let imageCanape = document.createElement("img");
+        imageCanape.src = `${produitEnregistreLocalStorage[canape].imgCanape}`;
+        imageCanape.alt = `${produitEnregistreLocalStorage[canape].imgCanapeAlt}`;
+        cartItemImg.appendChild(imageCanape);
+
+        //Création et ajout de la div content
+        let cartItemContent = document.createElement("div");
+        cartItemContent.className = `cart__item__content`;
+        articleProduit.appendChild(cartItemContent);
+
+        //Création et ajout de la div description
+        let cartItemContentDescription = document.createElement("div");
+        cartItemContentDescription.className = `cart__item__content__description`;
+        cartItemContent.appendChild(cartItemContentDescription);
+
+        //Création et ajout du titre h2 avec le nom du produit
+        let titreNomProduit = document.createElement("h2");
+        titreNomProduit.textContent = `${produitEnregistreLocalStorage[canape].nomCanape}`;
+        cartItemContentDescription.appendChild(titreNomProduit);
+
+        //Création et ajout de la couleur et du prix du Canapé
+        let couleurCanape = document.createElement("p");
+        couleurCanape.textContent = `${produitEnregistreLocalStorage[canape].couleurCanape}`;
+        cartItemContentDescription.appendChild(couleurCanape);
+
+        let prixCanape = document.createElement("p");
+        prixCanape.textContent = `${produitEnregistreLocalStorage[canape].prixCanape} €`;
+        cartItemContentDescription.appendChild(prixCanape);
+
+        //Création et ajout de la div description
+        let cartItemContentSettings = document.createElement("div");
+        cartItemContentSettings.className = `cart__item__content__settings`;
+        cartItemContent.appendChild(cartItemContentSettings);
+
+        //Création et ajout des div choix quantité et suppression
+        let cartItemContentSettingsQuantity = document.createElement("div");
+        cartItemContentSettingsQuantity.className = `cart__item__content__settings__quantity`;
+        cartItemContentSettings.appendChild(cartItemContentSettingsQuantity);
+        let cartItemContentSettingsDelete = document.createElement("div");
+        cartItemContentSettingsDelete.className = `cart__item__content__settings__delete`;
+        cartItemContentSettings.appendChild(cartItemContentSettingsDelete);
+
+        //Création et ajout de l'affichage de la quantité selectionné et des boutons pour modifier la quantité
+        let affichageQuantite = document.createElement("p");
+        affichageQuantite.textContent = `Qté :`;
+        cartItemContentSettingsQuantity.appendChild(affichageQuantite);
+
+        let choixQuantite = document.createElement("input");
+        choixQuantite.type = 'number';
+        choixQuantite.className = `itemQuantity`;
+        choixQuantite.name = 'itemQuantity';
+        choixQuantite.min = `1`;
+        choixQuantite.max = `100`;
+        choixQuantite.value = `${produitEnregistreLocalStorage[canape].nombreCanape}`;
+        cartItemContentSettingsQuantity.appendChild(choixQuantite);
+
+        //Création et ajout du bouton pour supprimer l'article du panier
+        let supprimerCanape = document.createElement("p");
+        supprimerCanape.className = `deleteItem`;
+        supprimerCanape.textContent = `Supprimer`;
+        cartItemContentSettingsDelete.appendChild(supprimerCanape);
+
+
+
+
     }
 }
+}
+//---------------------------------------Fin de la création du Dom-------------------------------------
 
+
+
+//--------------------Calcul du montant total du panier et du nombre d'article total------------------
 getTotal();
 
+
 function getTotal(){
-    //Ajouter les quantité et addition du total
+
+    // //Déclaration de la variable pour pouvoir y mettre les quantité présentes dans le panier
+    // let nombreTotalCanape = [];
+  
+
+    // //Récupérer les quanité dans le panier
+    // for (let m = 0; m < produitEnregistreLocalStorage.length; m++){
+    //     let quantiteCanapePanier = produitEnregistreLocalStorage[m].nombreCanape;
+        
+    //     //Mettre les quantité du panier dans un tableau
+    //     nombreTotalCanape.push (quantiteCanapePanier);
+    //     console.log(nombreTotalCanape);    
+        
+    // }
+
+    // //Addition des quantité stocker dans le tableau
+    // const reducer = (accumulator, currentValue) => accumulator + currentValue
+    // const sommeQuantiteCanape = nombreTotalCanape.reduce(reducer, 0);
+    // // const sommeQuantiteCanape = nombreTotalCanape.reduce(function 
+    // //     (accumulator, curValue){ return accumulator + curValue.n}, 0
+    // // )
+    // console.log(sommeQuantiteCanape);
+    // //Ajouter les quantité et addition du total
 
 }
 
+
+
+
+//---------------------------Fonction de suppression d'un élément dans le panier-----------------------------
 supprimerCanape()
 
 function supprimerCanape(){
 
-}
+    //Sélection de la class du bouton supprimer
+    let btnSupprimer = document.querySelectorAll(".deleteItem");
 
+    for (let k = 0; k < btnSupprimer.length; k++) {
+        btnSupprimer[k].addEventListener("click" , (event) => {
+            event.preventDefault();    
+    
+            // Sélection de l'id du produit qui sera supprimer en cliquant sur le bouton
+            let idSelectionSuppression = produitEnregistreLocalStorage[k].idCanape;
+            console.log(idSelectionSuppression);
+
+            // Sélection de la couleur du produit qui sera supprimer en cliquant sur le bouton
+            let couleurSelectionSuppression = produitEnregistreLocalStorage[k].couleurCanape;
+            console.log(couleurSelectionSuppression);
+
+            //Suppression de l'objet avec filter
+            produitEnregistreLocalStorage = produitEnregistreLocalStorage.filter(el => 
+                (el.idCanape && el.couleurCanape) !== (idSelectionSuppression && couleurSelectionSuppression));
+
+            //On envoie la variable dans le local storage
+            //Transformation en format JSON et envoi dans la key "produit" du local Storage
+            localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage)); 
+
+            //Alert pour avertir que le produit à été supprimer du panier et rechargemebt de la page
+            alert("Ce produit à été supprimer du panier");
+            //Rechargement de la page
+            window.location.href = "cart.html";
+        })
+    }
+
+}
+//---------------------------Fin de la fonction de suppression d'un élément dans le panier--------------------
+
+
+
+
+//---------------------------Fonction de modification de la quantité d'un élément du panier-------------------
 modifierQuantite()
 
 function modifierQuantite() {
 
 }
-
-//Sélection de l'id dans lequel on injecte le code HTML
-let positionArticlePanier = document.querySelector("#cart__items");
-
-let structureProduitPanier = [];
-
-// Affichage d'une alerte si le panier est vide 
-if(produitEnregistreLocalStorage === null){
-alert("Votre panier est vide");
-// //Création d'un élément HTML affichant que le Panier est vide
-// const panierVide = `
-//     <div>
-//         <div> Le Panier est vide </div>
-//     </div>
-// `;
-// positionArticlePanier.innerHTML = panierVide;
-
-} else {
-    // Si le panier n'est pas vide, il faut afficher les produits du local storage
-    
-
-    for(j = 0; j < produitEnregistreLocalStorage.length; j++){
-        
-        structureProduitPanier = structureProduitPanier + `
-        <article class="cart__item" data-id="${produitEnregistreLocalStorage[j].id_Canape}" data-color="${produitEnregistreLocalStorage[j].option_Couleur}">
-                <div class="cart__item__img">
-                  <img src="${produitEnregistreLocalStorage[j].img_Canape}" alt="${produitEnregistreLocalStorage[j].alt_Img_Canape}">
-                </div>
-                <div class="cart__item__content">
-                  <div class="cart__item__content__description">
-                    <h2>${produitEnregistreLocalStorage[j].nom_Canape}</h2>
-                    <p>${produitEnregistreLocalStorage[j].option_Couleur}</p>
-                    <p>${produitEnregistreLocalStorage[j].prix_Canape} €</p>
-                  </div>
-                  <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté : ${produitEnregistreLocalStorage[j].nombre_Canape}</p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">Supprimer</p>
-                    </div>
-                  </div>
-                </div>
-              </article>
-        `;
-    }
-        if(j == produitEnregistreLocalStorage.length){
-        //injection html dans la page panier
-        positionArticlePanier.innerHTML = structureProduitPanier;
-        }
-}
-//--------------------Fin de l'affichage des produits ajouter au panier --------
-
-//-------------------- Gestion du bouton supprimer l'article du panier ------------
-
-//Sélection de la class du bouton supprimer
-let btnSupprimer = document.querySelectorAll(".deleteItem");
-
-for (let k = 0; k < btnSupprimer.length; k++) {
-    btnSupprimer[k].addEventListener("click" , (event) => {
-        event.preventDefault();
-
-
-        // Sélection de l'id du produit qui sera supprimer en cliquant sur le bouton
-    let idSelectionSuppression = produitEnregistreLocalStorage[k].id_Canape
-    console.log(idSelectionSuppression);
-    })
-}
-
-
+//-----------------------Fin de la fonction de modification de la quantité d'un élément du panier-------------
 
 
 /*
 
-
-function addBasket(product){
-    //On récupère le panier qui existe dans le localstorage
-    let basket= getBasket();
-    //Recherche pour voir si le produit est déjà dans le panier
-    //On recherche dans le panier si il y a un produit (p) dont l'id
-    //est égal à l'id du produit que je veux ajouter (produit)
-    let foundProduct = basket.find(p => p.id == product.id);
-    //si le find() trouve l'élément en question il va le retourner
-    //sinon il va retourner undefined
-    if(foundProduct != undefined){
-        foundProduct.quantity++;
-    }else{
-        product.quantity = 1;
-        basket.push(product);
-    }
-
-
-    //On enregistre le nouveau panier
-    saveBasket(basket);
-}
 
 
 //fonction pour supprimer la totalié des "product" que l'on soihaite du panier
@@ -155,18 +222,7 @@ function changeQuantity(product, quantity) {
 }
 
 
-//Fonction qui permet de définir la quantité de produit qui se trouve dans le panier
-function getNumberProduct(){
-    //On récupère le panier
-    let basket= getBasket();
-    //On commence avec number à 0 
-    let number = 0;
-    // on fait une boucle for pour ajouter les quantité de chaque produit
-    for (let product of basket){
-        number += product.quantity;
-    }
-    return number;
-}
+
 
 //Fontion pour calculer le prix total des articles
 function getTotalPrice() {
