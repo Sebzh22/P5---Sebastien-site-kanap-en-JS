@@ -92,9 +92,9 @@ bouttonAjoutPanier.addEventListener("click", function() {
         let parametreCanape = {
             idCanape: idKanape,
             couleurCanape : couleurKanapSelection.value,
-            nombreCanape : quantiteKanapSelection.value,
+            nombreCanape : parseInt(quantiteKanapSelection.value),
             nomCanape : sectionTitreKanap.innerText,
-            prixCanape : sectionPrixKanap.innerText,
+            prixCanape : parseInt(sectionPrixKanap.innerText),
             imgCanape : imgKanape.src,
             imgCanapeAlt : imgKanape.alt,
         };
@@ -132,7 +132,8 @@ bouttonAjoutPanier.addEventListener("click", function() {
                 produitEnregistreLocalStorage.push(parametreCanape);
                 //Transformation en format JSON et envoi dans la key "produit" du local Storage
                 localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage)); 
-            }          
+            }
+          console.log(produitEnregistreLocalStorage);
             
      } else {
         alert("Vous n'avez pas sélectionné toutes les options. \nMerci de sélectionner une couleur et une quantité  entre 1 et 100.")

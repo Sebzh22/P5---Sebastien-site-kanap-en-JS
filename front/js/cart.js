@@ -106,39 +106,63 @@ function getPanier() {
 //---------------------------------------Fin de la création du Dom-------------------------------------
 
 
+//--------------------Calcul du nombre total d'article et affichage------------------
+getNombreTotal();
 
-//--------------------Calcul du montant total du panier et du nombre d'article total------------------
-getTotal();
 
-
-function getTotal(){
-
-    // //Déclaration de la variable pour pouvoir y mettre les quantité présentes dans le panier
-    // let nombreTotalCanape = [];
+function getNombreTotal(){
+    
+    //Déclaration de la variable pour pouvoir y mettre les quantité présentes dans le panier
+    let nombreTotalCanape = [];
   
 
-    // //Récupérer les quanité dans le panier
-    // for (let m = 0; m < produitEnregistreLocalStorage.length; m++){
-    //     let quantiteCanapePanier = produitEnregistreLocalStorage[m].nombreCanape;
+    //Récupérer les quanité dans le panier
+    for (let m = 0; m < produitEnregistreLocalStorage.length; m++){
+        let quantiteCanapePanier = produitEnregistreLocalStorage[m].nombreCanape;
         
-    //     //Mettre les quantité du panier dans un tableau
-    //     nombreTotalCanape.push (quantiteCanapePanier);
-    //     console.log(nombreTotalCanape);    
-        
-    // }
+        //Mettre les quantité du panier dans un tableau
+        nombreTotalCanape.push (quantiteCanapePanier);  
+    }
 
-    // //Addition des quantité stocker dans le tableau
-    // const reducer = (accumulator, currentValue) => accumulator + currentValue
-    // const sommeQuantiteCanape = nombreTotalCanape.reduce(reducer, 0);
-    // // const sommeQuantiteCanape = nombreTotalCanape.reduce(function 
-    // //     (accumulator, curValue){ return accumulator + curValue.n}, 0
-    // // )
-    // console.log(sommeQuantiteCanape);
-    // //Ajouter les quantité et addition du total
-
+    //Addition des quantité stocker dans le tableau
+    const reducer = (accumulator, currentValue) => accumulator + currentValue
+    const sommeQuantiteCanape = nombreTotalCanape.reduce(reducer, 0);
+    //Insertion du nombre total de canapé dans le DOM
+    let nbrTotalCanape = document.querySelector("#totalQuantity");
+    nbrTotalCanape.textContent = sommeQuantiteCanape;
+    
 }
 
+//--------------------Fin du calcul du nombre total d'article et affichage------------------
 
+
+//--------------------Calcul du prix total des articles dans le panier et affichage------------------
+getPrixTotal();
+
+
+function getPrixTotal(){
+    
+    //Déclaration de la variable pour pouvoir y mettre les quantité présentes dans le panier
+    let prixTotalCanape = [];
+  
+
+    //Récupérer les quanité dans le panier
+    for (let n = 0; n < produitEnregistreLocalStorage.length; n++){
+        let prixCanapePanier = (produitEnregistreLocalStorage[n].prixCanape)*(produitEnregistreLocalStorage[n].nombreCanape);
+        //Mettre les quantité du panier dans un tableau
+        prixTotalCanape.push (prixCanapePanier);       
+    }
+
+    //Addition des prix de chaque article calculé en fonction de la quantité
+    const reducer = (accumulator, currentValue) => accumulator + currentValue
+    const sommePrixCanape = prixTotalCanape.reduce(reducer, 0);
+    //Insertion du prix total des canapés dans le DOM
+    let prixTotal = document.querySelector("#totalPrice");
+    prixTotal.textContent = sommePrixCanape;
+    
+}
+
+//--------------------Fin du calcul du nombre total d'article et affichage------------------
 
 
 //---------------------------Fonction de suppression d'un élément dans le panier-----------------------------
@@ -186,21 +210,23 @@ function supprimerCanape(){
 modifierQuantite()
 
 function modifierQuantite() {
+    for (let o = 0; o < produitEnregistreLocalStorage.length; o++){
+        let quantiteCanapeSelection = produitEnregistreLocalStorage[o].nombreCanape;
+        console.log(quantiteCanapeSelection);
 
+    // }
+    // for (let canape in produitEnregistreLocalStorage){
+    const quantiteElement = document.querySelector(".itemQuantity");
+    quantiteElement.addEventListener('change', function(){  
+        quantiteElement.value = this.value;
+        console.log(quantiteElement.value);
+    } );
+    }
 }
 //-----------------------Fin de la fonction de modification de la quantité d'un élément du panier-------------
 
 
 /*
-
-
-
-//fonction pour supprimer la totalié des "product" que l'on soihaite du panier
-function removeFromBasket(product){
-    let basket = getBasket();
-    basket = basket.filter(p => p.id != product.id);
-    saveBasket(basket);
-}
 
 //fonction pour changer la quantité d'un produit du panier
 function changeQuantity(product, quantity) {
@@ -222,19 +248,40 @@ function changeQuantity(product, quantity) {
 }
 
 
+*/
 
 
-//Fontion pour calculer le prix total des articles
-function getTotalPrice() {
-    //On récupère le panier
-    let basket= getBasket();
-    //On commence avec number à 0 
-    let price = 0;
-    // on fait une boucle for pour ajouter les prix de chaque produit
-    for (let product of basket){
-        price += product.quantity * product.price;
-    }
-    return price;
+//-------------------------------Gestion du formulaire de commande ---------------------------------------
+
+//------------------Faire un addEventListener sur le bouton commander ------------------------
+const btnCommande = document.querySelector("#order");
+btnCommande.addEventListener("click", (e) =>{
+    e.preventDefault();
+    //Récupération des valeurs du formulaire pour les mettre dans le localStorage--
+    localStorage.setItem("prenom", document.querySelector("#firstName").value);
+    localStorage.setItem("nom", document.querySelector("#lastName").value);
+    localStorage.setItem("addresse", document.querySelector("#address").value);
+    localStorage.setItem("ville", document.querySelector("#city").value);
+    localStorage.setItem("email", document.querySelector("#email").value);  
+
+    //Mettre les values du formulaire dans un objet
+    const formulaire = {
+    prenom : localStorage.getItem ("prenom"),
+    nom : localStorage.getItem ("nom"),
+    adresse : localStorage.getItem ("adresse"),
+    ville : localStorage.getItem ("ville"),
+    email : localStorage.getItem ("email"),
 }
 
-*/
+//Mettre les values du formulaire et les produits dans un objet à envoyer vers le serveur
+const aEnvoyer = {
+    produitEnregistreLocalStorage,
+    formulaire
+}
+
+//Envoie de l'objet aEnvoyer vers le serveur
+
+
+
+})
+
