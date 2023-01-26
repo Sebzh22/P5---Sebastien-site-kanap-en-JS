@@ -132,8 +132,8 @@ function getNombreTotal(){
     nbrTotalCanape.textContent = sommeQuantiteCanape;
     
 }
-
 //--------------------Fin du calcul du nombre total d'article et affichage------------------
+
 
 
 //--------------------Calcul du prix total des articles dans le panier et affichage------------------
@@ -161,8 +161,9 @@ function getPrixTotal(){
     prixTotal.textContent = sommePrixCanape;
     
 }
+//--------------------Fin du calcul du prix total d'article des articles dans le panier et affichage------------------
 
-//--------------------Fin du calcul du nombre total d'article et affichage------------------
+
 
 
 //---------------------------Fonction de suppression d'un élément dans le panier-----------------------------
@@ -210,13 +211,11 @@ function supprimerCanape(){
 modifierQuantite()
 
 function modifierQuantite() {
-    for (let o = 0; o < produitEnregistreLocalStorage.length; o++){
-        let quantiteCanapeSelection = produitEnregistreLocalStorage[o].nombreCanape;
-        console.log(quantiteCanapeSelection);
-
-    // }
-    // for (let canape in produitEnregistreLocalStorage){
+    //Sélection de la class de input avec la
     const quantiteElement = document.querySelector(".itemQuantity");
+    
+    for (let article in produitEnregistreLocalStorage){
+    
     quantiteElement.addEventListener('change', function(){  
         quantiteElement.value = this.value;
         console.log(quantiteElement.value);
@@ -224,8 +223,6 @@ function modifierQuantite() {
     }
 }
 //-----------------------Fin de la fonction de modification de la quantité d'un élément du panier-------------
-
-
 /*
 
 //fonction pour changer la quantité d'un produit du panier
@@ -246,42 +243,161 @@ function changeQuantity(product, quantity) {
     }
     
 }
-
-
 */
 
 
 //-------------------------------Gestion du formulaire de commande ---------------------------------------
+//-----------------------------------Gestion de la validation du formulaire-------------------------------
+const validationForm = document.querySelector(".cart__order__form");
+
+console.log(validationForm.address);
+
+//Création de la reg exp pour validation du prenom,du nom et de la ville
+let textRegExp = new RegExp(
+    '^[A-Za-zéèêëàùï -,]{3,25}$'
+);
+
+//Création de la reg exp pour validation de l'email
+let emailRegExp = new RegExp(
+    '^[a-zA-Z0-9.-_éèêëàùï -,]+[@}{1}[a-zA-Z0-9.-_éèêëàùï -,]+[.]{1}[a-z]{2,10}$'
+);
+
+
+//Ecoute de la validation du prénom
+validationForm.firstName.addEventListener('change', function() {
+    validPrenom(this);    
+});
+
+//--------------Validation du prénom---------------
+const validPrenom = function (inputPrenom){ 
+    //Récupération de la balise du message d'erreur prenom
+    const firstNameErreur = document.querySelector("#firstNameErrorMsg")
+    console.log(textRegExp.test(inputPrenom.value));
+    //On test l'expression reguliere du prenom
+    if(textRegExp.test(inputPrenom.value)){
+        firstNameErreur.innerHTML = '';
+        return true;
+    } else {
+        firstNameErreur.innerHTML = 'Format nom valide!';
+        return false;
+    }
+    
+};
+
+//Ecoute de la validation du nom
+validationForm.lastName.addEventListener('change', function() {
+    validNom(this);
+});
+
+//--------------Validation du nom---------------
+const validNom = function (inputNom){
+    //Récupération de la balise du message d'erreur nom
+    const lastNameErreur = document.querySelector("#lastNameErrorMsg")
+    console.log(textRegExp.test(inputNom.value));
+    //On test l'expression reguliere du prenom
+    if(textRegExp.test(inputNom.value)){
+        lastNameErreur.innerHTML = '';
+        return true;
+    } else {
+        lastNameErreur.innerHTML = 'Format nom valide!';
+        return false;
+    }
+
+};
+
+//Ecoute de la validation de l'adresse
+validationForm.address.addEventListener('change', function() {
+    validAdresse(this);
+});
+
+//--------------Validation de l'adresse---------------
+const validAdresse = function (inputAdresse){
+    //Récupération de la balise du message d'erreur nom
+    const adresseErreur = document.querySelector("#addressErrorMsg")
+    console.log(textRegExp.test(inputAdresse.value));
+    //On test l'expression reguliere du prenom
+    if(textRegExp.test(inputAdresse.value)){
+        adresseErreur.innerHTML = '';
+        return true;
+    } else {
+        lastNameErreur.innerHTML = 'Format nom valide!';
+        return false;
+    }
+};
+
+
+//Ecoute de la validation de la ville
+validationForm.city.addEventListener('change', function() {
+    validVille(this);
+});
+
+//--------------Validation de la ville---------------
+const validVille = function (inputVille){ 
+    //Récupération de la balise du message d'erreur de la ville
+    const cityErreur = document.querySelector("#cityErrorMsg")
+    console.log(textRegExp.test(inputVille.value));
+    //On test l'expression reguliere de la ville
+    if(textRegExp.test(inputVille.value)){
+        cityErreur.innerHTML = '';
+        return true;
+    } else {
+        cityErreur.innerHTML = 'Format nom valide!';
+        return false;
+    }
+};
+
+//Ecoute de la validation de l'email'
+validationForm.email.addEventListener('change', function() {
+    validEmail(this);
+});
+
+//--------------Validation de l'email'---------------
+const validEmail = function (inputEmail){ 
+    //Récupération de la balise du message d'erreur de l'email'
+    const emailErreur = document.querySelector("#emailErrorMsg")
+    console.log(emailRegExp.test(inputEmail.value));
+    //On test l'expression reguliere de l'email'
+    if(emailRegExp.test(inputEmail.value)){
+        emailErreur.innerHTML = '';
+        return true;
+    } else {
+        emailErreur.innerHTML = 'Format nom valide!';
+        return false;
+    }
+};
+
 
 //------------------Faire un addEventListener sur le bouton commander ------------------------
 const btnCommande = document.querySelector("#order");
 btnCommande.addEventListener("click", (e) =>{
     e.preventDefault();
-    //Récupération des valeurs du formulaire pour les mettre dans le localStorage--
-    localStorage.setItem("prenom", document.querySelector("#firstName").value);
-    localStorage.setItem("nom", document.querySelector("#lastName").value);
-    localStorage.setItem("addresse", document.querySelector("#address").value);
-    localStorage.setItem("ville", document.querySelector("#city").value);
-    localStorage.setItem("email", document.querySelector("#email").value);  
+    // if() {
+    //     console.log("Formulaire OK");
+    //         //Mettre l'objet formulaireValues dans le localStorage
+    // localStorage.setItem("formulaire", JSON.stringify(formulaireValues));
+    // } else {
+    //     console.log("erreur");
+    // }
 
-    //Mettre les values du formulaire dans un objet
-    const formulaire = {
-    prenom : localStorage.getItem ("prenom"),
-    nom : localStorage.getItem ("nom"),
-    adresse : localStorage.getItem ("adresse"),
-    ville : localStorage.getItem ("ville"),
-    email : localStorage.getItem ("email"),
-}
-
-//Mettre les values du formulaire et les produits dans un objet à envoyer vers le serveur
-const aEnvoyer = {
-    produitEnregistreLocalStorage,
-    formulaire
-}
-
-//Envoie de l'objet aEnvoyer vers le serveur
+    //Récupération des valeurs du formulaire pour les mettre dans le localStorage
+    const formulaireValues = {
+        prenom : document.querySelector("#firstName").value,
+        nom : document.querySelector("#lastName").value,
+        adresse : document.querySelector("#address").value,
+        ville : document.querySelector("#city").value,
+        email : document.querySelector("#email").value,
+    }
 
 
+    
+
+    //Mettre les values du formulaire et les produits dans un objet à envoyer vers le serveur
+    const aEnvoyer = {
+        produitEnregistreLocalStorage,
+        formulaireValues
+    }
+
+    //Envoie de l'objet aEnvoyer vers le serveur
 
 })
 
