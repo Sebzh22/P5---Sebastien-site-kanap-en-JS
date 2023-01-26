@@ -208,17 +208,32 @@ function supprimerCanape(){
 
 
 //---------------------------Fonction de modification de la quantité d'un élément du panier-------------------
-modifierQuantite()
+modifierQuantite();
 
 function modifierQuantite() {
+    
     //Sélection de la class de input avec la
-    const quantiteElement = document.querySelector(".itemQuantity");
+    const quantiteElement = document.querySelectorAll(".itemQuantity");
     
-    for (let article in produitEnregistreLocalStorage){
-    
-    quantiteElement.addEventListener('change', function(){  
-        quantiteElement.value = this.value;
-        console.log(quantiteElement.value);
+    for (let k = 0; k < quantiteElement.length; k++){
+        quantiteElement[k].addEventListener("click" , (event) => {
+            event.preventDefault();  
+
+            let modificationQuantiteValue = quantiteElement[k].valueAsNumber;
+            
+            for (let m = 0; m<produitEnregistreLocalStorage.length; m++) {
+                let canapeModifier = produitEnregistreLocalStorage[m];
+                console.log(canapeModifier);
+                let canapeQuantiteID = event.target.closest('article').getAttribute("data-id");
+                let canapeQuantiteCouleur = event.target.closest('article').getAttribute("data-color");
+                if(canapeModifier.idCanape == canapeQuantiteID && canapeModifier.couleurCanape == canapeQuantiteCouleur) {
+                    produitEnregistreLocalStorage[m].nombreCanape = modificationQuantiteValue;
+                localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage)); 
+                  window.location.reload();
+                }
+
+            }
+                                 
     } );
     }
 }
@@ -249,8 +264,6 @@ function changeQuantity(product, quantity) {
 //-------------------------------Gestion du formulaire de commande ---------------------------------------
 //-----------------------------------Gestion de la validation du formulaire-------------------------------
 const validationForm = document.querySelector(".cart__order__form");
-
-console.log(validationForm.address);
 
 //Création de la reg exp pour validation du prenom,du nom et de la ville
 let textRegExp = new RegExp(
@@ -379,15 +392,19 @@ btnCommande.addEventListener("click", (e) =>{
     //     console.log("erreur");
     // }
 
-    //Récupération des valeurs du formulaire pour les mettre dans le localStorage
-    const formulaireValues = {
-        prenom : document.querySelector("#firstName").value,
-        nom : document.querySelector("#lastName").value,
-        adresse : document.querySelector("#address").value,
-        ville : document.querySelector("#city").value,
-        email : document.querySelector("#email").value,
-    }
+    
+let inputName = document.getElementById("firstName");
 
+let idCanape = [];
+
+//Récupération des valeurs du formulaire pour les mettre dans le localStorage
+const formulaireValues = {
+    firstName : inputName.value,
+    nom : document.querySelector("#lastName").value,
+    adresse : document.querySelector("#address").value,
+    ville : document.querySelector("#city").value,
+    email : document.querySelector("#email").value,
+}
 
     
 
