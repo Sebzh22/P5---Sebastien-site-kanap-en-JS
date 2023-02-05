@@ -104,7 +104,7 @@ bouttonAjoutPanier.addEventListener("click", function() {
        //---------------------------------- Local Storage -----------------------------
             // Déclaration de la variable "produitEnregistreLocalStorage" dans laquelle il y aura les key et les values qui sont dans le local storage
             //JSON.parse sert à convertir les données au format JSON qui sont dans le local storage en objet JS
-            let produitEnregistreLocalStorage = JSON.parse(localStorage.getItem("produit"));
+            let produitEnregistreLocalStorage = JSON.parse(localStorage.getItem("products"));
             console.log(produitEnregistreLocalStorage);
 
             //Si il y a quelques choses d'enregistre dans le localStorage
@@ -117,13 +117,13 @@ bouttonAjoutPanier.addEventListener("click", function() {
                         // On ajoute la nouvelle quantité à la quantité deja enregistré
                         let newQuantity = parseInt (parametreCanape.nombreCanape) + parseInt (resultatFind.nombreCanape);
                         resultatFind.nombreCanape = newQuantity;
-                        localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage));
+                        localStorage.setItem("products", JSON.stringify(produitEnregistreLocalStorage));
                     //Sinon on rajoute le Canapé selectionné
                     } else {
                         //Ajout dans le tableau de l'objet avec les values choisi par l'utilisateur
                         produitEnregistreLocalStorage.push(parametreCanape);
                         //Transformation en format JSON et envoi dans la key "produit" du local Storage
-                        localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage));  
+                        localStorage.setItem("products", JSON.stringify(produitEnregistreLocalStorage));  
                     }
             //S'il n'y a rien dans le localStorage        
             } else {
@@ -131,7 +131,7 @@ bouttonAjoutPanier.addEventListener("click", function() {
                 //Ajout dans le tableau de l'objet avec les values choisi par l'utilisateur
                 produitEnregistreLocalStorage.push(parametreCanape);
                 //Transformation en format JSON et envoi dans la key "produit" du local Storage
-                localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage)); 
+                localStorage.setItem("products", JSON.stringify(produitEnregistreLocalStorage)); 
             }
           console.log(produitEnregistreLocalStorage);
             
