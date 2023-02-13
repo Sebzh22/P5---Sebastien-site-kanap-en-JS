@@ -11,14 +11,14 @@ const idKanape = urlProductKanape.get("id");
 //Appel de la fonction qui récupère les informations du canapé
 getCanape();
 
-// Récupération des paramètres du canapé sélectionné
-const quantiteKanapSelection = document.querySelector("#quantity");
-const couleurKanapSelection = document.querySelector("#colors");
-const sectionTitreKanap = document.querySelector("#title");
-const sectionPrixKanap = document.querySelector("#price");
-const sectionDescriptionKanap = document.querySelector("#description");
-const sectionImg = document.querySelector(".item__img");
-const imgKanape = document.createElement("img"); 
+// Sélection des emplacement de chaque paramètre du canapé
+let quantiteKanapSelection = document.querySelector("#quantity");
+let couleurKanapSelection = document.querySelector("#colors");
+let sectionTitreKanap = document.querySelector("#title");
+let sectionPrixKanap = document.querySelector("#price");
+let sectionDescriptionKanap = document.querySelector("#description");
+let sectionImg = document.querySelector(".item__img");
+let imgKanape = document.createElement("img"); 
 
 
 
@@ -94,7 +94,7 @@ bouttonAjoutPanier.addEventListener("click", function() {
             couleurCanape : couleurKanapSelection.value,
             nombreCanape : parseInt(quantiteKanapSelection.value),
             nomCanape : sectionTitreKanap.innerText,
-            prixCanape : parseInt(sectionPrixKanap.innerText),
+            // prixCanape : parseInt(sectionPrixKanap.innerText),
             imgCanape : imgKanape.src,
             imgCanapeAlt : imgKanape.alt,
         };

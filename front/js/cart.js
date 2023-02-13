@@ -55,14 +55,31 @@ function getPanier() {
         titreNomProduit.textContent = `${produitEnregistreLocalStorage[canape].nomCanape}`;
         cartItemContentDescription.appendChild(titreNomProduit);
 
-        //Création et ajout de la couleur et du prix du Canapé
+        //Création et ajout de la couleur du Canapé
         let couleurCanape = document.createElement("p");
         couleurCanape.textContent = `${produitEnregistreLocalStorage[canape].couleurCanape}`;
         cartItemContentDescription.appendChild(couleurCanape);
 
-        let prixCanape = document.createElement("p");
-        prixCanape.textContent = `${produitEnregistreLocalStorage[canape].prixCanape} €`;
-        cartItemContentDescription.appendChild(prixCanape);
+        //Création et ajout du prix du Canapé
+
+            //Accès et récupération des ressources du canapé sélectionné avec son id précédement récupérer
+            fetch ("http://localhost:3000/api/products/" + produitEnregistreLocalStorage[canape].idCanape)
+            //Récupération du résultat de la promesse fetch
+            //response prend la valeur de l'objet renvoyé de fetch
+            //Utilisation de la méthode json() pour convertir response en données JSON
+            .then ((response) => {        
+                    return response.json();        
+            })     
+            //Récupération des data renvoyés par JSON
+            .then ((data) => {
+                console.log(data.price)
+                let prixCanape = document.createElement("p");      
+                prixCanape.textContent = `${data.price} €`;
+                cartItemContentDescription.appendChild(prixCanape);  
+            }) 
+        
+
+        
 
         //Création et ajout de la div description
         let cartItemContentSettings = document.createElement("div");
@@ -96,10 +113,6 @@ function getPanier() {
         supprimerCanape.className = `deleteItem`;
         supprimerCanape.textContent = `Supprimer`;
         cartItemContentSettingsDelete.appendChild(supprimerCanape);
-
-
-
-
     }
 }
 }
@@ -135,30 +148,42 @@ function getNombreTotal(){
 //--------------------Fin du calcul du nombre total d'article et affichage------------------
 
 
+async function getProduit(idProduct){
+    return fetch ("http://localhost:3000/api/products/" + idProduct)
+           
+            .then (response =>         
+                    response.json()        
+            )    
+            .catch ();
+}
+
 
 //--------------------Calcul du prix total des articles dans le panier et affichage------------------
 getPrixTotal();
 
-function getPrixTotal(){
-    
-    //Déclaration de la variable pour pouvoir y mettre les quantité présentes dans le panier
-    let prixTotalCanape = [];
+async function getPrixTotal(){
   
+    var totalPricePanier = 0;
 
-    //Récupérer les quanité dans le panier
+    //Récupérer les quantité dans le panier
     for (let n = 0; n < produitEnregistreLocalStorage.length; n++){
-        let prixCanapePanier = (produitEnregistreLocalStorage[n].prixCanape)*(produitEnregistreLocalStorage[n].nombreCanape);
-        //Mettre les quantité du panier dans un tableau
-        prixTotalCanape.push (prixCanapePanier);       
-    }
 
-    //Addition des prix de chaque article calculé en fonction de la quantité
-    const reducer = (accumulator, currentValue) => accumulator + currentValue
-    const sommePrixCanape = prixTotalCanape.reduce(reducer, 0);
-    //Insertion du prix total des canapés dans le DOM
-    let prixTotal = document.querySelector("#totalPrice");
-    prixTotal.textContent = sommePrixCanape;
-    
+        var nombreCanapeByProduct = produitEnregistreLocalStorage[n].nombreCanape;
+        
+
+        var prixCanapeByProduct = await getProduit(produitEnregistreLocalStorage[n].idCanape);
+        console.log(prixCanapeByProduct.price);
+
+        totalPricePanier += nombreCanapeByProduct * prixCanapeByProduct.price;
+        console.log(totalPricePanier); 
+        
+        let prixTotal = document.querySelector("#totalPrice");
+        prixTotal.textContent = totalPricePanier;
+        //Mettre les quantité du panier dans un tableau
+        // prixTotalCanape.push (prixCanapePanier);   
+        // console.log(prixCanapePanier);    
+    }   
+        
 }
 //--------------------Fin du calcul du prix total d'article des articles dans le panier et affichage------------------
 
@@ -190,7 +215,7 @@ function supprimerCanape(){
 
             //On envoie la variable dans le local storage
             //Transformation en format JSON et envoi dans la key "produit" du local Storage
-            localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage)); 
+            localStorage.setItem("products", JSON.stringify(produitEnregistreLocalStorage)); 
 
             //Alert pour avertir que le produit à été supprimer du panier et rechargemebt de la page
             alert("Ce produit à été supprimer du panier");
@@ -225,7 +250,7 @@ function modifierQuantite() {
                 let canapeQuantiteCouleur = event.target.closest('article').getAttribute("data-color");
                     if(canapeModifier.idCanape == canapeQuantiteID && canapeModifier.couleurCanape == canapeQuantiteCouleur) {
                         produitEnregistreLocalStorage[m].nombreCanape = modificationQuantiteValue;
-                        localStorage.setItem("produit", JSON.stringify(produitEnregistreLocalStorage)); 
+                        localStorage.setItem("products", JSON.stringify(produitEnregistreLocalStorage)); 
                         window.location.reload();
                     }
             }                        
@@ -243,23 +268,16 @@ function modifierQuantite() {
 const validationForm = document.querySelector(".cart__order__form");
 
 // //Création de la reg exp pour validation du prenom,du nom et de la ville
-// let textRegExp = new RegExp(
-//     '^[A-Za-zéèêëàùï -,1-9]{3,40}$'
-// );
-
-// //Création de la reg exp pour validation de l'email
-// let emailRegExp = new RegExp(
-//     '^[a-zA-Z0-9.-_éèêëàùï -,]+[@}{1}[a-zA-Z0-9.-_éèêëàùï -,]+[.]{1}[a-z]{2,10}$'
-// );
-
 const regExText = (value) => {
     return /^[A-Za-zéèêëàùï -]{3,40}$/ .test(value);
 }
 
+// //Création de la reg exp pour validation de l'adresse
 const regExAdresse = (value) => {
     return /^[A-Za-zéèêëàùï -,1-9]{3,40}$/ .test(value);
 }
 
+// //Création de la reg exp pour validation de l'email
 const regExEmail = (value) => {
     return /^[a-zA-Z0-9.-_éèêëàùï -,]+[@]{1}[a-zA-Z0-9.-_éèêëàùï -,]+[.]{1}[a-z]{2,10}$/ .test(value);
 }
@@ -282,28 +300,6 @@ function prenomControle() {
     }
 };
 
-/*
-//Ecoute de la validation du prénom
-validationForm.firstName.addEventListener('change', function() {
-    validPrenom(this);    
-    console.log(validPrenom(this));
-});
-
-//--------------Validation du prénom---------------
-const validPrenom = function (inputPrenom){ 
-    //Récupération de la balise du message d'erreur prenom
-    const firstNameErreur = document.querySelector("#firstNameErrorMsg")
-    const validiteRegExp = textRegExp.test(inputPrenom.value);
-    //On test l'expression reguliere du prenom
-    if(validiteRegExp){
-        firstNameErreur.innerHTML = '';
-        return true;
-    } else {
-        firstNameErreur.innerHTML = 'Format nom valide!';
-        return false;
-    }
-    
-};   */
 
 //Ecoute de la validation du nom
 validationForm.lastName.addEventListener('change', function() {
@@ -470,51 +466,55 @@ function emailControle() {
 
 
 // Création de constante pour se positionner dans chaque input du formulaire   
-const inputFirstName = document.getElementById("firstName");
-const inputLastName = document.getElementById("lastName");
-const inputAddress = document.getElementById("address");
-const inputCity = document.getElementById("city");
-const inputEmail = document.getElementById("email");
+let inputFirstName = document.getElementById("firstName");
+let inputLastName = document.getElementById("lastName");
+let inputAddress = document.getElementById("address");
+let inputCity = document.getElementById("city");
+let inputEmail = document.getElementById("email");
 
 //------------------Faire un addEventListener sur le bouton commander ------------------------
 const btnCommande = document.querySelector("#order");
 btnCommande.addEventListener("click", (e) =>{
     e.preventDefault();
     if(prenomControle() && nomControle() && adresseControle() && villeControle() && emailControle()){
-        //Récupération des valeurs du formulaire pour les mettre dans le localStorage
-        const formulaireValues = {
-        firstName : inputFirstName.value,
-        lastName : inputLastName.value,
-        address : inputAddress.value,
-        city : inputCity.value,
-        email : inputEmail.value,
+        
+
+        let idProducts = [];
+        for (let k = 0; k<produitEnregistreLocalStorage.length;k++) {
+            idProducts.push(produitEnregistreLocalStorage[k].idCanape);
         }
     
         //Mettre l'objet formulaireValues dans le localStorage
-        localStorage.setItem("contact", JSON.stringify(formulaireValues));
+        // localStorage.setItem("contact", JSON.stringify(contact));
         //Mettre les values du formulaire et les produits dans un objet à envoyer vers le serveur
-        const order = {
-            formulaireValues,
-            produitEnregistreLocalStorage,
+        let order = {
+            contact : {
+                firstName : inputFirstName.value,
+                lastName : inputLastName.value,
+                address : inputAddress.value,
+                city : inputCity.value,
+                email : inputEmail.value,
+            },
+            products: idProducts,
         }
         console.log(produitEnregistreLocalStorage);
-            //Envoie de l'objet order vers le serveur
-    fetch ('http://localhost:3000/api/products/order',{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-         
-        },
-        body: JSON.stringify(order),
-    })
-    .then(response => response.json())
- 
-    .then(data => {
-        console.log(data);
-        localStorage.setItem("orderId", data.orderId);
-        // window.location.href = `confirmation.html?orderId=${data.orderId}`;
-    });
 
+            //Envoie de l'objet order vers le serveur
+    fetch ("http://localhost:3000/api/products/order", {
+        method: 'POST',
+        body: JSON.stringify(order),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        
+    })
+    .then((response) => response.json())
+    .then(async function (resultOrder) {
+        order = await resultOrder;
+        document.location.href = "confirmation.html?orderId=" + order.orderId;
+        localStorage.clear();
+    });
     console.log(order);
     } else {
         alert("Erreur formulaire")
