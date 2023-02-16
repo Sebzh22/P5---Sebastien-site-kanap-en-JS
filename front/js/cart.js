@@ -187,9 +187,6 @@ async function getPrixTotal() {
 
     let prixTotal = document.querySelector("#totalPrice");
     prixTotal.textContent = totalPricePanier;
-    //Mettre les quantité du panier dans un tableau
-    // prixTotalCanape.push (prixCanapePanier);
-    // console.log(prixCanapePanier);
   }
 }
 //--------------------Fin du calcul du prix total d'article des articles dans le panier et affichage------------------
@@ -207,12 +204,10 @@ function supprimerCanape() {
 
       // Sélection de l'id du produit qui sera supprimer en cliquant sur le bouton
       let idSelectionSuppression = produitEnregistreLocalStorage[k].idCanape;
-      console.log(idSelectionSuppression);
 
       // Sélection de la couleur du produit qui sera supprimer en cliquant sur le bouton
       let couleurSelectionSuppression =
         produitEnregistreLocalStorage[k].couleurCanape;
-      console.log(couleurSelectionSuppression);
 
       //Suppression de l'objet avec filter
       produitEnregistreLocalStorage = produitEnregistreLocalStorage.filter(

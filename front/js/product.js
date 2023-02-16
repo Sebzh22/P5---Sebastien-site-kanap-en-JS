@@ -80,6 +80,16 @@ function getCanape() {
     });
 }
 
+/**
+ * Déclaration de la Fonction qui affiche un PopUp pour confirmer la mise au panier d'un produit
+*/
+function popUpConfirmation() {
+  if (window.confirm("Produit ajouté au Panier")) {
+  }
+}
+
+
+
 //---------------------------  Gestion de la mise au panier  --------------------------
 function gestionPanier(canape) {
   // Selection du bouton ajouter l'article au panier
@@ -132,6 +142,7 @@ function gestionPanier(canape) {
             "products",
             JSON.stringify(produitEnregistreLocalStorage)
           );
+          popUpConfirmation();
           //Sinon on rajoute le Canapé selectionné
         } else {
           //Ajout dans le tableau de l'objet avec les values choisi par l'utilisateur
@@ -141,6 +152,7 @@ function gestionPanier(canape) {
             "products",
             JSON.stringify(produitEnregistreLocalStorage)
           );
+          popUpConfirmation();
         }
         //S'il n'y a rien dans le localStorage
       } else {
@@ -152,6 +164,7 @@ function gestionPanier(canape) {
           "products",
           JSON.stringify(produitEnregistreLocalStorage)
         );
+        popUpConfirmation();
       }
       console.log(produitEnregistreLocalStorage);
     } else {
