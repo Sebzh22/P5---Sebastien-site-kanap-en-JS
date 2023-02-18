@@ -7,12 +7,12 @@ const queryStringUrl = window.location.search;
 
 /**
  *  Récupération de l'id des produits dans la requete URL
- */ 
+ */
 const urlProductKanape = new URLSearchParams(queryStringUrl);
 
 /**
  * Récupération de la valeur de id du produit sélectionner dans l'URL (la valeur qu'il y a après id=)
- */ 
+ */
 const idKanape = urlProductKanape.get("id");
 
 getCanape();
@@ -48,19 +48,19 @@ function getCanape() {
 
       /**
        * Insertion du titre correspondant à l'id de la page
-       */ 
+       */
       let titreKanape = document.createTextNode(data.name);
       sectionTitreKanap.appendChild(titreKanape);
 
       /**
        * Insertion du Prix correspondant au produit de la page
-       */ 
+       */
       let prixKanape = document.createTextNode(data.price);
       sectionPrixKanap.appendChild(prixKanape);
 
       /**
        * Insertion de la description du produit dans la balise p avec l'id description
-       */ 
+       */
       let descriptionKanape = document.createTextNode(data.description);
       sectionDescriptionKanap.appendChild(descriptionKanape);
 
@@ -82,13 +82,11 @@ function getCanape() {
 
 /**
  * Déclaration de la Fonction qui affiche un PopUp pour confirmer la mise au panier d'un produit
-*/
+ */
 function popUpConfirmation() {
   if (window.confirm("Produit ajouté au Panier")) {
   }
 }
-
-
 
 //---------------------------  Gestion de la mise au panier  --------------------------
 function gestionPanier(canape) {
@@ -97,7 +95,7 @@ function gestionPanier(canape) {
 
   //--------------------addEventListener  -  Ecoute du bouton et envoi du panier -------------------
   bouttonAjoutPanier.addEventListener("click", function () {
-    // Maintnenant il faut vérifier si la quantité est comprise entre 1 et 100
+    // Vérification si la quantité est comprise entre 1 et 100
     // el la couleur différent de vide
 
     if (
@@ -121,9 +119,7 @@ function gestionPanier(canape) {
       let produitEnregistreLocalStorage = JSON.parse(
         localStorage.getItem("products")
       );
-      console.log(produitEnregistreLocalStorage);
 
-      //Si il y a quelques choses d'enregistre dans le localStorage
       if (produitEnregistreLocalStorage) {
         //On cherche pour voir si il y a déja un canape avec le meme id et la meme couleur
         const resultatFind = produitEnregistreLocalStorage.find(
@@ -131,7 +127,6 @@ function gestionPanier(canape) {
             el.idCanape === idKanape &&
             el.couleurCanape === couleurKanapSelection.value
         );
-        //Si oui on modifie la quantité
         if (resultatFind) {
           // On ajoute la nouvelle quantité à la quantité deja enregistré
           let newQuantity =
@@ -143,7 +138,6 @@ function gestionPanier(canape) {
             JSON.stringify(produitEnregistreLocalStorage)
           );
           popUpConfirmation();
-          //Sinon on rajoute le Canapé selectionné
         } else {
           //Ajout dans le tableau de l'objet avec les values choisi par l'utilisateur
           produitEnregistreLocalStorage.push(parametreCanape);
@@ -154,19 +148,15 @@ function gestionPanier(canape) {
           );
           popUpConfirmation();
         }
-        //S'il n'y a rien dans le localStorage
       } else {
         produitEnregistreLocalStorage = [];
-        //Ajout dans le tableau de l'objet avec les values choisi par l'utilisateur
         produitEnregistreLocalStorage.push(parametreCanape);
-        //Transformation en format JSON et envoi dans la key "produit" du local Storage
         localStorage.setItem(
           "products",
           JSON.stringify(produitEnregistreLocalStorage)
         );
         popUpConfirmation();
       }
-      console.log(produitEnregistreLocalStorage);
     } else {
       alert(
         "Vous n'avez pas sélectionné toutes les options. \nMerci de sélectionner une couleur et une quantité  entre 1 et 100."

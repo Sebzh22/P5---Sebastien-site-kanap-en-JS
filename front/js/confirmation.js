@@ -13,12 +13,10 @@ console.log(orderNumero);
 /** Positionnement des éléments dans le DOM */
 let confirmationCommande = document.querySelector(".confirmation");
 
-/** Création d'un paragraphe contenant le numéro de commande */
 let confirmationTexte = document.createElement("p");
 confirmationTexte.innerHTML = `Commande validée ! <br> Votre numéro de commande est : `;
 confirmationCommande.appendChild(confirmationTexte);
 
-/** Création d'un span avec le numéro de commande*/
 let numeroCommande = document.createElement("span");
 numeroCommande.setAttribute(`data-id`, `orderId`);
 numeroCommande.textContent = `${orderNumero}`;

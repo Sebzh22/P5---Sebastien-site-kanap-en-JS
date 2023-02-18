@@ -17,21 +17,15 @@ function getPanier() {
 
     // Positionnement dans le DOM
     let panierVide = document.querySelector("#cart__items");
-
-    //Création et ajout d'une div contenant l'image
     let divPanierVide = document.createElement("div");
     panierVide.appendChild(divPanierVide);
-
     //Création du texte pour signaler le panier vide
     let textePanierVide = document.createElement("p");
     textePanierVide.textContent = `Votre panier ne contient actuellement aucun article`;
     divPanierVide.appendChild(textePanierVide);
-
   } else {
     // Récuperer les produits dans le localStorage
     for (let canape in produitEnregistreLocalStorage) {
-      //Création du DOM pour le produit
-
       // Positionnement dans le DOM
       let carteProduit = document.querySelector("#cart__items");
 
@@ -80,7 +74,6 @@ function getPanier() {
       cartItemContentDescription.appendChild(couleurCanape);
 
       //Création et ajout du prix du Canapé
-
       //Accès et récupération des ressources du canapé sélectionné avec son id précédement récupérer
       fetch(
         "http://localhost:3000/api/products/" +
@@ -94,7 +87,6 @@ function getPanier() {
         })
         //Récupération des data renvoyés par JSON
         .then((data) => {
-          console.log(data.price);
           let prixCanape = document.createElement("p");
           prixCanape.textContent = `${data.price} €`;
           cartItemContentDescription.appendChild(prixCanape);
@@ -143,25 +135,26 @@ getNombreTotal();
 function getNombreTotal() {
   if (produitEnregistreLocalStorage) {
     //Déclaration de la variable pour pouvoir y mettre les quantité présentes dans le panier
-  let nombreTotalCanape = [];
+    let nombreTotalCanape = [];
 
-  //Récupérer les quanité dans le panier
-  for (let m = 0; m < produitEnregistreLocalStorage.length; m++) {
-    let quantiteCanapePanier = produitEnregistreLocalStorage[m].nombreCanape;
+    //Récupérer les quanité dans le panier
+    for (let m = 0; m < produitEnregistreLocalStorage.length; m++) {
+      let quantiteCanapePanier = produitEnregistreLocalStorage[m].nombreCanape;
 
-    //Mettre les quantité du panier dans un tableau
-    nombreTotalCanape.push(quantiteCanapePanier);
+      //Mettre les quantité du panier dans un tableau
+      nombreTotalCanape.push(quantiteCanapePanier);
+    }
+
+    //Addition des quantité stocker dans le tableau
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+    const sommeQuantiteCanape = nombreTotalCanape.reduce(reducer, 0);
+    //Insertion du nombre total de canapé dans le DOM
+    let nbrTotalCanape = document.querySelector("#totalQuantity");
+    nbrTotalCanape.textContent = sommeQuantiteCanape;
+  } else {
+    nbrTotalCanape.textContent = 0;
   }
-
-  //Addition des quantité stocker dans le tableau
-  const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  const sommeQuantiteCanape = nombreTotalCanape.reduce(reducer, 0);
-  //Insertion du nombre total de canapé dans le DOM
-  let nbrTotalCanape = document.querySelector("#totalQuantity");
-  nbrTotalCanape.textContent = sommeQuantiteCanape;
 }
-}
-  
 //--------------------Fin du calcul du nombre total d'article et affichage------------------
 
 async function getProduit(idProduct) {
@@ -177,31 +170,30 @@ async function getPrixTotal() {
   if (produitEnregistreLocalStorage) {
     var totalPricePanier = 0;
 
-  //Récupérer les quantité dans le panier
-  for (let n = 0; n < produitEnregistreLocalStorage.length; n++) {
-    var nombreCanapeByProduct = produitEnregistreLocalStorage[n].nombreCanape;
+    //Récupérer les prix dans le panier
+    for (let n = 0; n < produitEnregistreLocalStorage.length; n++) {
+      var nombreCanapeByProduct = produitEnregistreLocalStorage[n].nombreCanape;
 
-    var prixCanapeByProduct = await getProduit(
-      produitEnregistreLocalStorage[n].idCanape
-    );
-    console.log(prixCanapeByProduct.price);
+      var prixCanapeByProduct = await getProduit(
+        produitEnregistreLocalStorage[n].idCanape
+      );
 
-    totalPricePanier += nombreCanapeByProduct * prixCanapeByProduct.price;
-    console.log(totalPricePanier);
-
+      totalPricePanier += nombreCanapeByProduct * prixCanapeByProduct.price;
+    }
     let prixTotal = document.querySelector("#totalPrice");
     prixTotal.textContent = totalPricePanier;
+  } else {
+    getPrixTotal.textContent = 0;
   }
-  }
-  
 }
 //--------------------Fin du calcul du prix total d'article des articles dans le panier et affichage------------------
 
 //---------------------------Fonction de suppression d'un élément dans le panier-----------------------------
 supprimerCanape();
-
+/**
+ * Suppression des produits correspondant au bouton appuyé
+ */
 function supprimerCanape() {
-  //Sélection de la class du bouton supprimer
   let btnSupprimer = document.querySelectorAll(".deleteItem");
 
   for (let k = 0; k < btnSupprimer.length; k++) {
@@ -223,15 +215,13 @@ function supprimerCanape() {
       );
 
       //On envoie la variable dans le local storage
-      //Transformation en format JSON et envoi dans la key "produit" du local Storage
       localStorage.setItem(
         "products",
         JSON.stringify(produitEnregistreLocalStorage)
       );
 
-      //Alert pour avertir que le produit à été supprimer du panier et rechargemebt de la page
+      //Alert pour avertir que le produit à été supprimer du panier et rechargement de la page
       alert("Ce produit à été supprimer du panier");
-      //Rechargement de la page
       window.location.href = "cart.html";
     });
   }
@@ -240,9 +230,10 @@ function supprimerCanape() {
 
 //---------------------------Fonction de modification de la quantité d'un élément du panier-------------------
 modifierQuantite();
-
+/**
+ * Modification de la quantité de l'élement sélectionné
+ */
 function modifierQuantite() {
-  //Sélection de la class de input avec la
   const quantiteElement = document.querySelectorAll(".itemQuantity");
 
   for (let k = 0; k < quantiteElement.length; k++) {
@@ -253,7 +244,6 @@ function modifierQuantite() {
 
       for (let m = 0; m < produitEnregistreLocalStorage.length; m++) {
         let canapeModifier = produitEnregistreLocalStorage[m];
-        console.log(canapeModifier);
         let canapeQuantiteID = event.target
           .closest("article")
           .getAttribute("data-id");
@@ -282,17 +272,17 @@ function modifierQuantite() {
 //-----------------------------------Gestion de la validation du formulaire-------------------------------
 const validationForm = document.querySelector(".cart__order__form");
 
-// //Création de la reg exp pour validation du prenom,du nom et de la ville
+//Création de la reg exp pour validation du prenom,du nom et de la ville
 const regExText = (value) => {
   return /^[A-Za-zéèêëàùï -]{3,40}$/.test(value);
 };
 
-// //Création de la reg exp pour validation de l'adresse
+//Création de la reg exp pour validation de l'adresse
 const regExAdresse = (value) => {
   return /^[A-Za-zéèêëàùï -,1-9]{3,40}$/.test(value);
 };
 
-// //Création de la reg exp pour validation de l'email
+//Création de la reg exp pour validation de l'email
 const regExEmail = (value) => {
   return /^[a-zA-Z0-9.-_éèêëàùï -,]+[@]{1}[a-zA-Z0-9.-_éèêëàùï -,]+[.]{1}[a-z]{2,10}$/.test(
     value
@@ -302,7 +292,6 @@ const regExEmail = (value) => {
 //Ecoute de la validation du prénom
 validationForm.firstName.addEventListener("change", function () {
   prenomControle();
-  console.log(prenomControle());
 });
 
 function prenomControle() {
@@ -320,7 +309,6 @@ function prenomControle() {
 //Ecoute de la validation du nom
 validationForm.lastName.addEventListener("change", function () {
   nomControle();
-  console.log(nomControle());
 });
 
 function nomControle() {
@@ -338,7 +326,6 @@ function nomControle() {
 //Ecoute de la validation de l'adresse
 validationForm.address.addEventListener("change", function () {
   adresseControle();
-  console.log(adresseControle());
 });
 
 function adresseControle() {
@@ -356,7 +343,6 @@ function adresseControle() {
 //Ecoute de la validation de la ville
 validationForm.city.addEventListener("change", function () {
   villeControle();
-  console.log(villeControle());
 });
 
 function villeControle() {
@@ -371,10 +357,9 @@ function villeControle() {
   }
 }
 
-//Ecoute de la validation de la ville
+//Ecoute de la validation de l'email'
 validationForm.email.addEventListener("change", function () {
   emailControle();
-  console.log(emailControle());
 });
 
 function emailControle() {
@@ -443,7 +428,6 @@ btnCommande.addEventListener("click", (e) => {
         document.location.href = "confirmation.html?orderId=" + order.orderId;
         localStorage.clear();
       });
-    console.log(order);
   } else {
     alert("Erreur formulaire");
   }

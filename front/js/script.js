@@ -1,25 +1,23 @@
-/** 
- * déclaration et appel de la fonction spécial fetch 
-*/
+/**
+ * Requete de l'API
+ */
 async function fetchText() {
   let response = await fetch("http://localhost:3000/api/products");
   return await response.json();
-}
+};
 
 /**
- * Affichage d'un PopUp en cas d'echec de connexion à l'API 
-*/
+ * Affichage d'un PopUp en cas d'echec de connexion à l'API
+ */
 function affichagePopUp() {
   if (window.confirm("Connexion impossible à l'API")) {
-    window.location.href("index.html");
   }
-}
-
+};
 
 getCanape();
-
 /**
- *  fonction qui nous renvoie les éléments des canapés récupérer dans l'API
+ * Renvoie les éléments des canapés récupérer dans l'API
+ * Et affichage des canapés dans le DOM
  */
 async function getCanape() {
   let result = await fetchText()
@@ -27,7 +25,7 @@ async function getCanape() {
       const articles = res;
       /** Création de la boucle for qui récuperera l'ensemble des informations de l'API pour chaque article */
       for (let i = 0; i < articles.length; i++) {
-       /** Positionnement dans le DOM */
+        /** Positionnement dans le DOM */
         let sectionFiches = document.querySelector(".items");
 
         //Création d'un lien "a" contenant toutes les informations des canapés et qui renverra à la page souhaité
@@ -58,10 +56,6 @@ async function getCanape() {
         newArticle.appendChild(descriptionCanape);
       }
     })
-
-    /**
-     * Affichage du PopUp si la connexion à l'API est impossible
-     */
     .catch(function (err) {
       affichagePopUp();
     });
