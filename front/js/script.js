@@ -7,7 +7,7 @@ async function fetchText() {
 }
 
 /**
- * Déclaration de la Fonction qui affiche un PopUp en cas d'echec de connexion à l'API
+ * Affichage d'un PopUp en cas d'echec de connexion à l'API 
 */
 function affichagePopUp() {
   if (window.confirm("Connexion impossible à l'API")) {
@@ -15,10 +15,11 @@ function affichagePopUp() {
   }
 }
 
+
 getCanape();
+
 /**
  *  fonction qui nous renvoie les éléments des canapés récupérer dans l'API
- * 
  */
 async function getCanape() {
   let result = await fetchText()

@@ -141,7 +141,8 @@ function getPanier() {
 getNombreTotal();
 
 function getNombreTotal() {
-  //Déclaration de la variable pour pouvoir y mettre les quantité présentes dans le panier
+  if (produitEnregistreLocalStorage) {
+    //Déclaration de la variable pour pouvoir y mettre les quantité présentes dans le panier
   let nombreTotalCanape = [];
 
   //Récupérer les quanité dans le panier
@@ -159,6 +160,8 @@ function getNombreTotal() {
   let nbrTotalCanape = document.querySelector("#totalQuantity");
   nbrTotalCanape.textContent = sommeQuantiteCanape;
 }
+}
+  
 //--------------------Fin du calcul du nombre total d'article et affichage------------------
 
 async function getProduit(idProduct) {
@@ -171,7 +174,8 @@ async function getProduit(idProduct) {
 getPrixTotal();
 
 async function getPrixTotal() {
-  var totalPricePanier = 0;
+  if (produitEnregistreLocalStorage) {
+    var totalPricePanier = 0;
 
   //Récupérer les quantité dans le panier
   for (let n = 0; n < produitEnregistreLocalStorage.length; n++) {
@@ -188,6 +192,8 @@ async function getPrixTotal() {
     let prixTotal = document.querySelector("#totalPrice");
     prixTotal.textContent = totalPricePanier;
   }
+  }
+  
 }
 //--------------------Fin du calcul du prix total d'article des articles dans le panier et affichage------------------
 
